@@ -2007,6 +2007,13 @@ function main()
     _tidy_exec "cp "${prepare}"/SSDT-XHC.aml "${compile}"" "Install Xhci table"
 
     #
+    # Rename a High Sierra Kext to prevent BT Issue
+    #
+    if ["${isSierra}" -eq 0];
+      then
+        _tidy_exec "sudo mv "${gExtensions_Repo[0]}/AirPortBrcmNIC-MFG.kext" "${gExtensions_Repo[0]}/AirPortBrcmNIC-MFG.bak"" "Rename AirPortBrcmNIC-MFG.kext..."
+    fi
+    #
     # Clean up dynamic tables USB related tables
     #
     _tidy_exec "rm "${compile}"SSDT-*x.aml" "Clean dynamic SSDTs"
@@ -2067,12 +2074,11 @@ function main()
         _PRINT_MSG "--->: ${BLUE}Unlocking maximum pixel clock...${OFF}"
         if [ $gMINOR_VER -ge $gDelimitation_OSVer ];
           then
-            if [ "${isSierra}" -eq 1];
+            if [ "${isSierra}" -eq 0];
               then
                 #
                 # 10.13 - Using Lilu.kext + CoreDisplayFixUp.kext to prevent clipboard crash + BT PATCH
                 #
-                _tidy_exec "sudo mv "${gExtensions_Repo[0]}/AirPortBrcmNIC-MFG.kext" "${gExtensions_Repo[0]}/AirPortBrcmNIC-MFG.bak"" "Rename AirPortBrcmNIC-MFG.kext..."
                 _PRINT_MSG "OK: CoreDisplayFixUp was installed in CLOVER/kexts"
               else
                 #
