@@ -2079,7 +2079,8 @@ function main()
                 #
                 # 10.13 - Using Lilu.kext + CoreDisplayFixUp.kext to prevent clipboard crash + BT PATCH
                 #
-                _PRINT_MSG "OK: CoreDisplayFixUp was installed in CLOVER/kexts"
+                local KEXT_DIR="${gESPMountPoint}/EFI/CLOVER/kexts/${gOSVer}"
+                _tidy_exec "sudo cp -RX "${REPO}/Kexts/coredisplay_fixup/CoreDisplayFixUp.kext" "${KEXT_DIR}/CoreDisplayFixUp.kext"" "Patch and sign framework"
               else
                 #
                 # 10.12
