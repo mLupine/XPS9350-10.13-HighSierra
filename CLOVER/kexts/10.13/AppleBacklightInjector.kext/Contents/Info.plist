@@ -5,9 +5,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleGetInfoString</key>
-	<string>999.9.10, (c) 2017 syscl. All rights reserved.</string>
+	<string>0.9.0, Copyright 2013 RehabMan Inc. All rights reserved.</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.syscl.driver.AppleBacklightInjector</string>
+	<string>org.rehabman.injector.AppleBacklightInjector</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>999.9.10</string>
+	<string>0.9.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleSupportedPlatforms</key>
@@ -23,21 +23,23 @@
 		<string>MacOSX</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>999.9.10</string>
+	<string>0.9.0</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>AppleIntelPanelA</key>
 		<dict>
 			<key>ApplePanels</key>
 			<dict>
-				<key>F10T144a</key>
+				<key>F14Txxxx</key>
+				<data>ABEAAAA0AFIAcwCUAL4A+gE2AXIBxQIvArkDYAQaBQoGDgcQ</data>
+				<key>F15Txxxx</key>
+				<data>ABEAAAA2AFQAfQCyAPUBSQGxAisCuANZBBME7AXzBzQIrwrZ</data>
+				<key>F16Txxxx</key>
 				<data>ABEAAAAYACcAOgBSAHEAlgDEAPwBQAGTAfYCbgL+A6oEeAVs</data>
-				<key>F10T1449</key>
-				<data>ABEAAAAYACcAOgBSAHEAlgDEAPwBQAGTAfYCbgL+A6oEeAVs</data>
-				<key>F10T1421</key>
-				<data>ABEAAAAYACcAOgBSAHEAlgDEAPwBQAGTAfYCbgL+A6oEeAVs</data>
-				<key>F10T1420</key>
-				<data>ABEAAAAYACcAOgBSAHEAlgDEAPwBQAGTAfYCbgL+A6oEeAVs</data>
+				<key>F17Txxxx</key>
+				<data>ABEAAAAfADQATwBxAJsAzwEOAV0BuwIvArkDYAQpBR4GRAeh</data>
+				<key>F18Txxxx</key>
+				<data>ABEAAABTAIwA1QExAaICLgLYA64ErAXlB1kJHAs7DdAQ6hSZ</data>
 			</dict>
 			<key>CFBundleIdentifier</key>
 			<string>com.apple.driver.AppleBacklight</string>
@@ -63,7 +65,7 @@
 			<key>IONameMatch</key>
 			<string>backlight</string>
 			<key>IOProbeScore</key>
-			<integer>4000</integer>
+			<integer>2500</integer>
 			<key>IOProviderClass</key>
 			<string>IOACPIPlatformDevice</string>
 		</dict>

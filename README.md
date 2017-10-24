@@ -52,7 +52,7 @@ Reboot your macOS to see the change. If you have any problem about the script, t
 ```
 
 Note:
-- ```VoodooPS2Controller``` is recommended on macOS ```Sierra```(10.```12+```)
+- ```VoodooPS2Controller``` is recommended on macOS ```Sierra``` and ```Hish Sierra``` (10.```12+```)
 - ```AppleSmartTouchPad``` users(recommend on 10.```11-```): for two finger scrolling you need to change the speed of the Scrolling once to get it work and also have to enable them in Trackpad preferences. 
 
 
@@ -64,6 +64,15 @@ This months I have ```2``` dues and ```2``` more ```midterm exams```(Only two we
 
 Change Log
 ----------------
+2017-10-24 - ```High Sierra BETA Update```
+- Updated Deploy.sh
+- Corrected the PixelClock Patch for QHD Screens on High Sierra. Old patch causes Clipboard Crash, restore Vanilla CoreDisplay.framework to fix that issue.
+- Added SSDT-EC + SSDT-USBX for correct USB Power Management
+- Added SSDT-ALC256.aml 
+- Updated config.plist with new High Sierra Patches
+- Fixed High Sierra Bluetooth issue by renaming AirPortBrcmNIC-MFG.kext in AirPortBrcmNIC-MFG.bak
+
+
 2017-09-04
 
 - Fixed Wi-Fi slow issue after sleep by correcting ```_UPC``` value from ```0x03``` to ```0xFF``` (c) @ZombieTheBest 

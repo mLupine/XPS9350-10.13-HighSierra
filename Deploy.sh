@@ -148,6 +148,17 @@ doCommands=("${REPO}/tools/iasl" "/usr/libexec/plistbuddy -c" "perl -p -e 's/(\d
 let gDelimitation_OSVer=12
 
 #
+# Get Current OS ver
+#
+current_OSVer=`sw_vers -productVersion`
+contains "${current_OSVer}" "10.12"
+if [ "$?" -eq "0" ]; then
+    isSierra=1 #true: MacOS Sierra
+  else
+    isSierra=0 #false: MacOS High Sierra
+fi
+
+#
 # Define target website
 #
 target_website=https://github.com/syscl/XPS9350-macOS
@@ -700,7 +711,7 @@ function _check_and_fix_config()
     #
     # Check if tinySSDT items are existed
     #
-    local dCheck_SSDT=("SSDT-XPS13SKL" "SSDT-ARPT-RP05" "SSDT-XHC")
+    local dCheck_SSDT=("SSDT-XPS13SKL" "SSDT-ARPT-RP05" "SSDT-XHC" "SSDT-EC" "SSDT-USBX" "SSDT-PNLF" "SSDT-ALC256")
     local gSortedOrder=$(awk '/<key>SortedOrder<\/key>.*/,/<\/array>/' ${config_plist} | egrep -o '(<string>.*</string>)' | sed -e 's/<\/*string>//g')
     local gSortedNumber=$(awk '/<key>SortedOrder<\/key>.*/,/<\/array>/' ${config_plist} | egrep -o '(<string>.*</string>)' | sed -e 's/<\/*string>//g' | wc -l)
     for tinySSDT in "${dCheck_SSDT[@]}"
@@ -723,50 +734,73 @@ function _check_and_fix_config()
     #
     gClover_kexts_to_patch_data=$(awk '/<key>KextsToPatch<\/key>.*/,/<\/array>/' ${config_plist})
 
-    #
-    # Repair the lid wake problem for 0x19260004 by syscl/lighting/Yating Zhou.
-    #
-    cLidWake="Enable lid wake for 0x19260004 credit syscl/lighting/Yating Zhou"
-    fLidWake="0a0b0300 00070600 03000000 04000000"
-    rLidWake="0f0b0300 00070600 03000000 04000000"
-    nLidWake="AppleIntelSKLGraphicsFramebuffer"
-
-    #
-    # eDP, port 0000, 0x19160000 credit syscl
-    #
-    cIntelGraphicsFrameBuffer="eDP, port 0000, 0x19160000 credit syscl"
-    fIntelGraphicsFrameBuffer="00000000 00000000 00000800 02000000 98040000"
-    rIntelGraphicsFrameBuffer="00000000 00000000 00000800 00040000 98040000"
-    nIntelGraphicsFrameBuffer="AppleIntelSKLGraphicsFramebuffer"
-
-    #
-    # Check if "BT4LE-Handoff-Hotspot" is in place of kextstopatch.
-    #
-    cHandoff="Enable BT4LE-Handoff-Hotspot"
-    fHandoff="4885ff74 47488b07"
-    rHandoff="41be0f00 0000eb44"
-    nHandoff="IOBluetoothFamily"
-
-    #
-    # Now let's inject it.
-    #
-    cBinData=("$cLidWake" "$cIntelGraphicsFrameBuffer" "$cHandoff")
-    fBinData=("$fLidWake" "$fIntelGraphicsFrameBuffer" "$fHandoff")
-    rBinData=("$rLidWake" "$rIntelGraphicsFrameBuffer" "$rHandoff")
-    nBinData=("$nLidWake" "$nIntelGraphicsFrameBuffer" "$nHandoff")
-
-    for ((j=0; j<${#nBinData[@]}; ++j))
-    do
-      local gCmp_fString=$(_bin2base64 "$fBinData")
-      local gCmp_rString=$(_bin2base64 "$rBinData")
-      if [[ $gClover_kexts_to_patch_data != *"$gCmp_fString"* || $gClover_kexts_to_patch_data != *"$gCmp_rString"* ]];
-        then
+    if [ $gMINOR_VER -ge $gDelimitation_OSVer ];
+      then
+        if ["${isSierra}" -eq 1];
+          then
           #
-          # No patch existed in config.plist, add patch for it:
+          # Repair the lid wake problem for 0x19260004 by syscl/lighting/Yating Zhou.
           #
-          _kext2patch "${cBinData[j]}" "${fBinData[j]}" "${rBinData[j]}" "${nBinData[j]}"
-      fi
-    done
+          cLidWake="Enable lid wake for 0x19260004 credit syscl/lighting/Yating Zhou"
+          fLidWake="0a0b0300 00070600 03000000 04000000"
+          rLidWake="0f0b0300 00070600 03000000 04000000"
+          nLidWake="AppleIntelSKLGraphicsFramebuffer"
+
+          #
+          # eDP, port 0000, 0x19160000 credit syscl
+          #
+          cIntelGraphicsFrameBuffer="eDP, port 0000, 0x19160000 credit syscl"
+          fIntelGraphicsFrameBuffer="00000000 00000000 00000800 02000000 98040000"
+          rIntelGraphicsFrameBuffer="00000000 00000000 00000800 00040000 98040000"
+          nIntelGraphicsFrameBuffer="AppleIntelSKLGraphicsFramebuffer"
+
+          #
+          # Check if "BT4LE-Handoff-Hotspot" is in place of kextstopatch.
+          #
+          cHandoff="Enable BT4LE-Handoff-Hotspot"
+          fHandoff="4885ff74 47488b07"
+          rHandoff="41be0f00 0000eb44"
+          nHandoff="IOBluetoothFamily"
+
+          #
+          # Now let's inject it.
+          #
+          cBinData=("$cLidWake" "$cIntelGraphicsFrameBuffer" "$cHandoff")
+          fBinData=("$fLidWake" "$fIntelGraphicsFrameBuffer" "$fHandoff")
+          rBinData=("$rLidWake" "$rIntelGraphicsFrameBuffer" "$rHandoff")
+          nBinData=("$nLidWake" "$nIntelGraphicsFrameBuffer" "$nHandoff")
+
+          for ((j=0; j<${#nBinData[@]}; ++j))
+          do
+            local gCmp_fString=$(_bin2base64 "$fBinData")
+            local gCmp_rString=$(_bin2base64 "$rBinData")
+            if [[ $gClover_kexts_to_patch_data != *"$gCmp_fString"* || $gClover_kexts_to_patch_data != *"$gCmp_rString"* ]];
+            then
+              #
+              # No patch existed in config.plist, add patch for it:
+              #
+              _kext2patch "${cBinData[j]}" "${fBinData[j]}" "${rBinData[j]}" "${nBinData[j]}"
+            fi
+          done
+      else
+        #
+        # 10.13 config.plist patches
+        #
+        local gHeaderFix=$(awk '/<key>FixHeaders_20000000<\/key>.*/,/<*\/>/' ${config_plist})
+        if [[ $gHeaderFix != *"FixHeaders_20000000"* ]];
+          then
+            #
+            # Add FixHeaders_20000000 to Clover (Needed to boot High Sierra)
+            #
+            ${doCommands[1]} "Add ':ACPI:DSDT:Fixes:FixHeaders_20000000' bool" "${config_plist}"
+            ${doCommands[1]} "Set ':ACPI:DSDT:Fixes:FixHeaders_20000000' true" "${config_plist}"
+          else
+            if [[ $gHeaderFix == *"false"* ]];
+              then
+                ${doCommands[1]} "Set ':ACPI:DSDT:Fixes:FixHeaders_20000000' true" "${config_plist}"
+            fi
+        fi
+    fi
 
     #
     # Gain boot argv.
@@ -1605,6 +1639,21 @@ function _serialMLBGen()
     fi
 }
 
+# contains(string, substring)
+#
+# Returns 0 if the specified string contains the specified substring,
+# otherwise returns 1.
+function contains() {
+    string="$1"
+    substring="$2"
+    if test "${string#*$substring}" != "$string"
+    then
+        return 0    # $substring is in $string
+    else
+        return 1    # $substring is not in $string
+    fi
+}
+
 function main()
 {
     #
@@ -1670,12 +1719,14 @@ function main()
     diskutil list
     printf "Enter ${RED}EFI's${OFF} IDENTIFIER, e.g. ${BOLD}disk0s1${OFF}"
     read -p ": " targetEFI
+    # Prints out
     #
     # Choose touchpad kext you prefer
     #
+    printf "Current System Version: MacOS ${current_OSVer}\n"
     printf "Available touchpad kext:\n"
-    printf "[   ${BLUE}1${OFF}  ] ApplePS2SmartTouchPad\n"
-    printf "[   ${BLUE}2${OFF}  ] VoodooPS2Controller\n"
+    printf "[   ${BLUE}1${OFF}  ] ApplePS2SmartTouchPad (10.11)\n"
+    printf "[   ${BLUE}2${OFF}  ] VoodooPS2Controller\n (10.12+)"
     printf "Please choose the desired touchpad kext (1 or 2)"
     read -p ": " gSelect_TouchPad_Drv
     case "${gSelect_TouchPad_Drv}" in
@@ -1886,6 +1937,30 @@ function main()
     _tidy_exec "compile_table "${sensrhub}"" "Compile sensrhub"
 
     #
+    # Copy SSDT-EC.aml.
+    #
+    _PRINT_MSG "--->: ${BLUE}Copying SSDT-EC.aml to ./DSDT/compile...${OFF}"
+    _tidy_exec "cp "${prepare}"/SSDT-EC.aml "${compile}"" "Copy SSDT-EC.aml to ./DSDT/compile"
+
+    #
+    # Copy SSDT-PNLF.aml.
+    #
+    _PRINT_MSG "--->: ${BLUE}Copying SSDT-PNLF.aml to ./DSDT/compile...${OFF}"
+    _tidy_exec "cp "${prepare}"/SSDT-PNLF.aml "${compile}"" "Copy SSDT-PNLF.aml to ./DSDT/compile"
+
+    #
+    # Copy SSDT-ALC256.aml.
+    #
+    _PRINT_MSG "--->: ${BLUE}Copying SSDT-ALC256.aml to ./DSDT/compile...${OFF}"
+    _tidy_exec "cp "${prepare}"/SSDT-ALC256.aml "${compile}"" "Copy SSDT-ALC256.aml to ./DSDT/compile"
+
+    #
+    # Copy SSDT-USBX.aml.
+    #
+    _PRINT_MSG "--->: ${BLUE}Copying SSDT-USBX.aml to ./DSDT/compile...${OFF}"
+    _tidy_exec "cp "${prepare}"/SSDT-USBX.aml "${compile}"" "Copy SSDT-USBX.aml to ./DSDT/compile"
+
+    #
     # Copy SSDT-rmne.aml.
     #
     _PRINT_MSG "--->: ${BLUE}Copying SSDT-rmne.aml to ./DSDT/compile...${OFF}"
@@ -1967,7 +2042,7 @@ function main()
         _PRINT_MSG "--->: ${BLUE}Generating and setting Mac Serial, MLB and UUID${OFF}"
         _serialMLBGen
     fi
-    
+
     #
     # Refresh BootCamp theme.
     #
@@ -1992,18 +2067,29 @@ function main()
         _PRINT_MSG "--->: ${BLUE}Unlocking maximum pixel clock...${OFF}"
         if [ $gMINOR_VER -ge $gDelimitation_OSVer ];
           then
-            #
-            # 10.12+
-            #
-            gTarget_Framework_Repo="/System/Library/Frameworks/CoreDisplay.framework/Versions/Current/CoreDisplay"
+            if [ "${isSierra}" -eq 1];
+              then
+                #
+                # 10.13 - Using Lilu.kext + CoreDisplayFixUp.kext to prevent clipboard crash + BT PATCH
+                #
+                _tidy_exec "sudo mv "${gExtensions_Repo[0]}/AirPortBrcmNIC-MFG.kext" "${gExtensions_Repo[0]}/AirPortBrcmNIC-MFG.bak"" "Rename AirPortBrcmNIC-MFG.kext..."
+                _PRINT_MSG "OK: CoreDisplayFixUp was installed in CLOVER/kexts"
+              else
+                #
+                # 10.12
+                #
+                gTarget_Framework_Repo="/System/Library/Frameworks/CoreDisplay.framework/Versions/Current/CoreDisplay"
+                sudo perl -i.bak -pe 's|\xB8\x01\x00\x00\x00\xF6\xC1\x01\x0F\x85|\x33\xC0\x90\x90\x90\x90\x90\x90\x90\xE9|sg' ${gTarget_Framework_Repo}
+                _tidy_exec "sudo codesign -f -s - ${gTarget_Framework_Repo}" "Patch and sign framework"
+            fi
           else
             #
             # 10.12-
             #
             gTarget_Framework_Repo="/System/Library/Frameworks/IOKit.framework/Versions/Current/IOKit"
+            sudo perl -i.bak -pe 's|\xB8\x01\x00\x00\x00\xF6\xC1\x01\x0F\x85|\x33\xC0\x90\x90\x90\x90\x90\x90\x90\xE9|sg' ${gTarget_Framework_Repo}
+            _tidy_exec "sudo codesign -f -s - ${gTarget_Framework_Repo}" "Patch and sign framework"
         fi
-        sudo perl -i.bak -pe 's|\xB8\x01\x00\x00\x00\xF6\xC1\x01\x0F\x85|\x33\xC0\x90\x90\x90\x90\x90\x90\x90\xE9|sg' ${gTarget_Framework_Repo}
-        _tidy_exec "sudo codesign -f -s - ${gTarget_Framework_Repo}" "Patch and sign framework"
     fi
 
     _setPlatformId
