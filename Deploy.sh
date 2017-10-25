@@ -147,6 +147,21 @@ doCommands=("${REPO}/tools/iasl" "/usr/libexec/plistbuddy -c" "perl -p -e 's/(\d
 #
 let gDelimitation_OSVer=12
 
+# contains(string, substring)
+#
+# Returns 0 if the specified string contains the specified substring,
+# otherwise returns 1.
+function contains() {
+    string="$1"
+    substring="$2"
+    if test "${string#*$substring}" != "$string"
+    then
+        return 0    # $substring is in $string
+    else
+        return 1    # $substring is not in $string
+    fi
+}
+
 #
 # Get Current OS ver
 #
@@ -736,7 +751,7 @@ function _check_and_fix_config()
 
     if [ $gMINOR_VER -ge $gDelimitation_OSVer ];
       then
-        if ["${isSierra}" -eq 1];
+        if [${isSierra} -eq 1];
           then
           #
           # Repair the lid wake problem for 0x19260004 by syscl/lighting/Yating Zhou.
@@ -775,33 +790,32 @@ function _check_and_fix_config()
             local gCmp_fString=$(_bin2base64 "$fBinData")
             local gCmp_rString=$(_bin2base64 "$rBinData")
             if [[ $gClover_kexts_to_patch_data != *"$gCmp_fString"* || $gClover_kexts_to_patch_data != *"$gCmp_rString"* ]];
-            then
-              #
-              # No patch existed in config.plist, add patch for it:
-              #
-              _kext2patch "${cBinData[j]}" "${fBinData[j]}" "${rBinData[j]}" "${nBinData[j]}"
+              then
+                #
+                # No patch existed in config.plist, add patch for it:
+                #
+                _kext2patch "${cBinData[j]}" "${fBinData[j]}" "${rBinData[j]}" "${nBinData[j]}"
             fi
           done
-      else
-        #
-        # 10.13 config.plist patches
-        #
-        local gHeaderFix=$(awk '/<key>FixHeaders_20000000<\/key>.*/,/<*\/>/' ${config_plist})
-        if [[ $gHeaderFix != *"FixHeaders_20000000"* ]];
-          then
-            #
-            # Add FixHeaders_20000000 to Clover (Needed to boot High Sierra)
-            #
-            ${doCommands[1]} "Add ':ACPI:DSDT:Fixes:FixHeaders_20000000' bool" "${config_plist}"
-            ${doCommands[1]} "Set ':ACPI:DSDT:Fixes:FixHeaders_20000000' true" "${config_plist}"
+        else
+          #
+          # 10.13 config.plist patches
+          #
+          local gHeaderFix=$(awk '/<key>FixHeaders_20000000<\/key>.*/,/<*\/>/' ${config_plist})
+          if [[ $gHeaderFix != *"FixHeaders_20000000"* ]];
+            then
+              #
+              # Add FixHeaders_20000000 to Clover (Needed to boot High Sierra)
+              #
+              ${doCommands[1]} "Add ':ACPI:DSDT:Fixes:FixHeaders_20000000' bool" "${config_plist}"
+              ${doCommands[1]} "Set ':ACPI:DSDT:Fixes:FixHeaders_20000000' true" "${config_plist}"
           else
             if [[ $gHeaderFix == *"false"* ]];
               then
                 ${doCommands[1]} "Set ':ACPI:DSDT:Fixes:FixHeaders_20000000' true" "${config_plist}"
             fi
-        fi
+         fi
     fi
-
     #
     # Gain boot argv.
     #
@@ -1636,21 +1650,6 @@ function _serialMLBGen()
         ${doCommands[1]} "Set ':RtVariables:ROM' UseMacAddr0" ${config_plist}
         ${doCommands[1]} "Set ':SMBIOS:SerialNumber' ${gGenerateSerial}" ${config_plist}
         ${doCommands[1]} "Set ':SMBIOS:SmUUID' ${gGenerateUUID}" ${config_plist}
-    fi
-}
-
-# contains(string, substring)
-#
-# Returns 0 if the specified string contains the specified substring,
-# otherwise returns 1.
-function contains() {
-    string="$1"
-    substring="$2"
-    if test "${string#*$substring}" != "$string"
-    then
-        return 0    # $substring is in $string
-    else
-        return 1    # $substring is not in $string
     fi
 }
 
