@@ -16,6 +16,7 @@ macOS installation
 4. Change BIOS settings to the following
   * Disable Secure Boot
   * Set SATA Operation to AHCI
+  * Disable FastBoot
 5. Boot to USB and hit F4 and/or Fn-F4 to capture ACPI tables to the USB
 6. Install macOS but do not reboot until you have finished steps 7 and 8, below.
 7. Install Clover with UEFI only and UEFI64Drivers to SSD.
@@ -58,9 +59,7 @@ Note:
 
 TODO List
 ----------------
-
-This months I have ```2``` dues and ```2``` more ```midterm exams```(Only two weeks left for us to struggling two exams in just one subject???), so I will be a bit slower. What I will do next week are listed below
-- Try to merge @squash- 's autogen ```serial```, ```uuid``` pull request
+- Nothing to do
 
 Change Log
 ----------------
