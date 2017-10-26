@@ -815,7 +815,6 @@ function _check_and_fix_config()
                 ${doCommands[1]} "Set ':ACPI:DSDT:Fixes:FixHeaders_20000000' true" "${config_plist}"
             fi
          fi
-       fi
     fi
     #
     # Gain boot argv.
@@ -2074,7 +2073,7 @@ function main()
         _PRINT_MSG "--->: ${BLUE}Unlocking maximum pixel clock...${OFF}"
         if [ $gMINOR_VER -ge $gDelimitation_OSVer ];
           then
-            if [ "${isSierra}" -eq 0];
+            if [ "${isSierra}" -eq 0 ];
               then
                 #
                 # 10.13 - Using Lilu.kext + CoreDisplayFixUp.kext to prevent clipboard crash + BT PATCH
