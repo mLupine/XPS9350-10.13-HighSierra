@@ -815,6 +815,7 @@ function _check_and_fix_config()
                 ${doCommands[1]} "Set ':ACPI:DSDT:Fixes:FixHeaders_20000000' true" "${config_plist}"
             fi
          fi
+       fi
     fi
     #
     # Gain boot argv.
