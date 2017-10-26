@@ -64,6 +64,10 @@ This months I have ```2``` dues and ```2``` more ```midterm exams```(Only two we
 
 Change Log
 ----------------
+2017-10-26 
+- Fixed Deploy.sh code (Thank you @chenyisen!)
+- Removed SSDT-USBX + SSDT-PNLF as they were already patched in original Deploy.
+
 2017-10-24 - ```High Sierra BETA Update```
 - Updated Deploy.sh
 - Corrected the PixelClock Patch for QHD Screens on High Sierra. Old patch causes Clipboard Crash, restore Vanilla CoreDisplay.framework to fix that issue.
