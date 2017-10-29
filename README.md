@@ -63,7 +63,7 @@ TODO List
 
 Change Log
 ----------------
-2017-10-29 
+2017-10-29 - ```High Sierra STABLE```
 - High Sierra STABLE Deploy
 - Fixed Backlight issue
 
