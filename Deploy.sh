@@ -3,6 +3,7 @@
 #
 # syscl/Yating Zhou/lighting from bbs.PCBeta.com
 # Merge for Dell XPS 13 9350(Skylake)
+# High Sierra Support by @ZombieTheBest
 #
 
 #================================= GLOBAL VARS ==================================
@@ -176,7 +177,7 @@ fi
 #
 # Define target website
 #
-target_website=https://github.com/syscl/XPS9350-macOS
+target_website=https://github.com/ZombieTheBest/XPS9350-10.13-HighSierra
 
 #
 #--------------------------------------------------------------------------------
@@ -212,7 +213,7 @@ function _PRINT_MSG()
 function _update()
 {
     #
-    # Sync all files from https://github.com/syscl/XPS9350-macOS
+    # Sync all files from https://github.com/ZombieTheBest/XPS9350-10.13-HighSierra
     #
     # Check if github is available
     #
@@ -1683,7 +1684,7 @@ function main()
         gDisableRebuildnAudioInst=${kBASHReturnFailure}
     fi
     #
-    # Sync all files from https://github.com/syscl/XPS9350-macOS
+    # Sync all files from https://github.com/ZombieTheBest/XPS9350-10.13-HighSierra
     #
     # Check if github is available
     #
@@ -2149,7 +2150,8 @@ function main()
     _del "${gESPMountPoint}/EFI/CLOVER/config.plistg"
 
     _PRINT_MSG "NOTE: Congratulations! All operation has been completed"
-    _PRINT_MSG "NOTE: Reboot now. -${BOLD}syscl/lighting/Yating Zhou @PCBeta${OFF}"
+    _PRINT_MSG "NOTE: Reboot now. -${BOLD}Script By syscl/lighting/Yating Zhou @PCBeta${OFF}"
+    _PRINT_MSG "${BOLD}High Sierra Support by @ZombieTheBest${OFF}"
 }
 
 #==================================== START =====================================
