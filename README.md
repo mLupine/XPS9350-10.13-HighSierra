@@ -5,7 +5,7 @@ This project targets at giving the relatively complete functional macOS for XPS1
 
 Before installing macOS
 ----------------
-Since the original WiFi module is not compatible with macOS, you need to buy a DW1830 module.
+Since the original WiFi module is not compatible with macOS, you need to buy a DW1560 (recommended) or DW1830 module.
 Then follow this [guide](https://www.ifixit.com/Teardown/Dell+XPS+13+Teardown/36157) to swap it.
 
 macOS installation
