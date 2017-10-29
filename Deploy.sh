@@ -726,7 +726,7 @@ function _check_and_fix_config()
     #
     # Check if tinySSDT items are existed
     #
-    local dCheck_SSDT=("SSDT-XPS13SKL" "SSDT-ARPT-RP05" "SSDT-XHC" "SSDT-EC" "SSDT-ALC256")
+    local dCheck_SSDT=("SSDT-XPS13SKL" "SSDT-ARPT-RP05" "SSDT-XHC" "SSDT-PNLF" "SSDT-ALC256")
     local gSortedOrder=$(awk '/<key>SortedOrder<\/key>.*/,/<\/array>/' ${config_plist} | egrep -o '(<string>.*</string>)' | sed -e 's/<\/*string>//g')
     local gSortedNumber=$(awk '/<key>SortedOrder<\/key>.*/,/<\/array>/' ${config_plist} | egrep -o '(<string>.*</string>)' | sed -e 's/<\/*string>//g' | wc -l)
     for tinySSDT in "${dCheck_SSDT[@]}"
@@ -751,7 +751,7 @@ function _check_and_fix_config()
 
     if [ $gMINOR_VER -ge $gDelimitation_OSVer ];
       then
-        if [${isSierra} -eq 1];
+        if [$isSierra -eq 1];
           then
           #
           # Repair the lid wake problem for 0x19260004 by syscl/lighting/Yating Zhou.
@@ -814,8 +814,8 @@ function _check_and_fix_config()
               then
                 ${doCommands[1]} "Set ':ACPI:DSDT:Fixes:FixHeaders_20000000' true" "${config_plist}"
             fi
-         fi
-       fi
+          fi
+        fi
     fi
     #
     # Gain boot argv.
@@ -1937,11 +1937,10 @@ function main()
     _tidy_exec "compile_table "${sensrhub}"" "Compile sensrhub"
 
     #
-    # Copy SSDT-EC.aml.
+    # Copy SSDT-PNLF.aml.
     #
-    _PRINT_MSG "--->: ${BLUE}Copying SSDT-EC.aml to ./DSDT/compile...${OFF}"
-    _tidy_exec "cp "${prepare}"/SSDT-EC.aml "${compile}"" "Copy SSDT-EC.aml to ./DSDT/compile"
-
+    _PRINT_MSG "--->: ${BLUE}Copying SSDT-PNLF.aml to ./DSDT/compile...${OFF}"
+    _tidy_exec "cp "${prepare}"/SSDT-PNLF.aml "${compile}"" "Copy SSDT-PNLF.aml to ./DSDT/compile"
 
     #
     # Copy SSDT-ALC256.aml.
@@ -2063,7 +2062,7 @@ function main()
         _PRINT_MSG "--->: ${BLUE}Unlocking maximum pixel clock...${OFF}"
         if [ $gMINOR_VER -ge $gDelimitation_OSVer ];
           then
-            if [ "${isSierra}" -eq 0 ];
+            if [ "${isSierra}" -eq 0];
               then
                 #
                 # 10.13 - Using Lilu.kext + CoreDisplayFixUp.kext to prevent clipboard crash + BT PATCH
