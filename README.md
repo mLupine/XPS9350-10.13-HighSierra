@@ -63,6 +63,10 @@ TODO List
 
 Change Log
 ----------------
+2017-10-29 
+- High Sierra STABLE Deploy
+- Fixed Backlight issue
+
 2017-10-26 
 - Fixed Deploy.sh code (Thank you @chenyisen!)
 - Removed SSDT-USBX + SSDT-EC as they were already patched in original Deploy.
