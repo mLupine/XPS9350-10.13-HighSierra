@@ -177,7 +177,7 @@ fi
 #
 # Define target website
 #
-target_website=https://github.com/ZombieTheBest/XPS9350-10.13-HighSierra
+target_website=https://github.com/mLupine/XPS9350-10.13-HighSierra
 
 #
 #--------------------------------------------------------------------------------
@@ -213,7 +213,7 @@ function _PRINT_MSG()
 function _update()
 {
     #
-    # Sync all files from https://github.com/ZombieTheBest/XPS9350-10.13-HighSierra
+    # Sync all files from https://github.com/mLupine/XPS9350-10.13-HighSierra
     #
     # Check if github is available
     #
@@ -1684,7 +1684,7 @@ function main()
         gDisableRebuildnAudioInst=${kBASHReturnFailure}
     fi
     #
-    # Sync all files from https://github.com/ZombieTheBest/XPS9350-10.13-HighSierra
+    # Sync all files from https://github.com/mLupine/XPS9350-10.13-HighSierra
     #
     # Check if github is available
     #
