@@ -338,6 +338,7 @@ function _tidy_exec()
 
 function compile_table()
 {
+    _PRINT_MSG "--->: ${BLUE}Compiling $1...${OFF}"
     "${REPO}"/tools/iasl -vr -p "${compile}"$1.aml "${precompile}"$1.dsl
 }
 
@@ -752,7 +753,7 @@ function _check_and_fix_config()
 
     if [ $gMINOR_VER -ge $gDelimitation_OSVer ];
       then
-        if [$isSierra -eq 1];
+        if [ $isSierra -eq 1 ];
           then
           #
           # Repair the lid wake problem for 0x19260004 by syscl/lighting/Yating Zhou.
@@ -896,10 +897,11 @@ function _find_acpi()
     #
     for ((index = 1; index <= ${number}; index++))
     do
-      grep -i "DptfTa" "${REPO}"/DSDT/raw/SSDT-${index}.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
+      grep -i "DptfTa" "${REPO}"/DSDT/raw/SSDT-${index}-*.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
 
       if [ "${RETURN_VAL}" == 0 ]; then
-          DptfTa=SSDT-${index}
+          #DptfTa=SSDT-${index}
+	      DptfTa="SSDT-14-DptfTabl"
       fi
     done
 
@@ -908,10 +910,11 @@ function _find_acpi()
     #
     for ((index = 1; index <= ${number}; index++))
     do
-      grep -i "SaSsdt" "${REPO}"/DSDT/raw/SSDT-${index}.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
+      grep -i "SaSsdt" "${REPO}"/DSDT/raw/SSDT-${index}-*.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
 
       if [ "${RETURN_VAL}" == 0 ]; then
-          SaSsdt=SSDT-${index}
+          #SaSsdt=SSDT-${index}
+          SaSsdt=SSDT-5-SaSsdt
       fi
     done
 
@@ -920,10 +923,11 @@ function _find_acpi()
     #
     for ((index = 1; index <= ${number}; index++))
     do
-      grep -i "sensrhub" "${REPO}"/DSDT/raw/SSDT-${index}.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
+      grep -i "sensrhub" "${REPO}"/DSDT/raw/SSDT-${index}-*.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
 
       if [ "${RETURN_VAL}" == 0 ]; then
-          sensrhub=SSDT-${index}
+          #sensrhub=SSDT-${index}
+          sensrhub=SSDT-1-sensrhub
       fi
     done
 
@@ -939,10 +943,11 @@ function _find_acpi()
     #
     for ((index = 1; index <= ${number}; index++))
     do
-      grep -i "Ther_Rvp" "${REPO}"/DSDT/raw/SSDT-${index}.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
+      grep -i "Ther_Rvp" "${REPO}"/DSDT/raw/SSDT-${index}-*.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
 
       if [ "${RETURN_VAL}" == 0 ]; then
-          rmSSDT_0=SSDT-${index}
+          #rmSSDT_0=SSDT-${index}
+          rmSSDT_0="SSDT-3-Ther_Rvp"
       fi
     done
     #
@@ -950,10 +955,11 @@ function _find_acpi()
     #
     for ((index = 1; index <= ${number}; index++))
     do
-      grep -i "CpuSsdt" "${REPO}"/DSDT/raw/SSDT-${index}.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
+      grep -i "CpuSsdt" "${REPO}"/DSDT/raw/SSDT-${index}-*.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
 
       if [ "${RETURN_VAL}" == 0 ]; then
-          rmSSDT_1=SSDT-${index}
+          #rmSSDT_1=SSDT-${index}
+          rmSSDT_1="SSDT-6-CpuSsdt"
       fi
     done
     #
@@ -961,10 +967,11 @@ function _find_acpi()
     #
     for ((index = 1; index <= ${number}; index++))
     do
-      grep -i "xh_rvp07" "${REPO}"/DSDT/raw/SSDT-${index}.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
+      grep -i "xh_rvp07" "${REPO}"/DSDT/raw/SSDT-${index}-*.dsl &> /dev/null && RETURN_VAL=0 || RETURN_VAL=1
 
       if [ "${RETURN_VAL}" == 0 ]; then
-          rmSSDT_2=SSDT-${index}
+          #rmSSDT_2=SSDT-${index}
+          rmSSDT_2="SSDT-4-xh_rvp07"
       fi
     done
     gRm_SSDT_Tabl=("$rmSSDT_0" "$rmSSDT_1" "$rmSSDT_2")
@@ -1998,7 +2005,7 @@ function main()
     #
     # Rename a High Sierra Kext to prevent BT Issue
     #
-    if ["${isSierra}" -eq 0];
+    if [ "${isSierra}" -eq 0 ];
       then
         _tidy_exec "sudo mv "${gExtensions_Repo[0]}/AirPortBrcmNIC-MFG.kext" "${gExtensions_Repo[0]}/AirPortBrcmNIC-MFG.bak"" "Rename AirPortBrcmNIC-MFG.kext..."
     fi
@@ -2063,7 +2070,7 @@ function main()
         _PRINT_MSG "--->: ${BLUE}Unlocking maximum pixel clock...${OFF}"
         if [ $gMINOR_VER -ge $gDelimitation_OSVer ];
           then
-            if [ "${isSierra}" -eq 0];
+            if [ "${isSierra}" -eq 0 ];
               then
                 #
                 # 10.13 - Using Lilu.kext + CoreDisplayFixUp.kext to prevent clipboard crash + BT PATCH
